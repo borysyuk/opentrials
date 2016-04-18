@@ -131,7 +131,7 @@ function searchPage(request, reply) {
     q: query.q,
     sample_size_start: query.sample_size_start,
     sample_size_end: query.sample_size_end,
-};
+  };
 
   let badRequest = false;
   Joi.validate(searchParams, schema, (err) => {
