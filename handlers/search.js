@@ -117,8 +117,10 @@ function searchPage(request, reply) {
     page: Joi.number().integer().min(1),
     registration_date_start: Joi.date().format('YYYY-MM-DD').empty(''),
     registration_date_end: Joi.date().format('YYYY-MM-DD').empty(''),
-    location: Joi.string().empty(''),
+    location: Joi.array().single(true).items(Joi.string().empty('')),
     q: Joi.string().empty(''),
+    sample_size_start: Joi.number().integer().empty(''),
+    sample_size_end: Joi.number().integer().empty(''),
   });
 
   const searchParams = {
@@ -127,7 +129,9 @@ function searchPage(request, reply) {
     registration_date_end: query.registration_date_end,
     location: query.location,
     q: query.q,
-  };
+    sample_size_start: query.sample_size_start,
+    sample_size_end: query.sample_size_end,
+};
 
   let badRequest = false;
   Joi.validate(searchParams, schema, (err) => {
