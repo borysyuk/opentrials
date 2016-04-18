@@ -5,6 +5,7 @@ const Boom = require('boom');
 const _ = require('lodash');
 const trials = require('../agents/trials');
 const locations = require('../agents/locations');
+const Joi = require('joi');
 
 function getPagination(url, currentPage, perPage, maxPages, totalCount) {
   const getPageUrl = (pageNumber) => {
@@ -72,6 +73,27 @@ function getFilters(query) {
 
 function searchPage(request, reply) {
   const query = request.query;
+
+  var schema = Joi.object().keys({
+    page: Joi.number().integer().min(1),
+    registration_date_start: Joi.date().format('YYYY-MM-DD').empty(''),
+    registration_date_end: Joi.date().format('YYYY-MM-DD').empty(''),
+    location: Joi.string().empty(''),
+    q: Joi.string().required()
+  });
+
+  var badRequest = false;
+  Joi.validate(query, schema, (err, value) => {
+    badRequest = (err !== null);
+  });
+
+  if (badRequest) {
+    reply(
+      Boom.badRequest('invalid query')
+    )
+    return;
+  }
+
   const queryStr = query.q;
   const page = (query.page) ? parseInt(query.page, 10) : undefined;
   const perPage = 10;
