@@ -79,11 +79,19 @@ function searchPage(request, reply) {
     registration_date_start: Joi.date().format('YYYY-MM-DD').empty(''),
     registration_date_end: Joi.date().format('YYYY-MM-DD').empty(''),
     location: Joi.string().empty(''),
-    q: Joi.string().required()
+    q: Joi.string().empty('')
   });
 
+  var searchParams = {
+    page: query.page,
+    registration_date_start: query.registration_date_start,
+    registration_date_end: query.registration_date_end,
+    location: query.location,
+    q: query.q
+  };
+
   var badRequest = false;
-  Joi.validate(query, schema, (err, value) => {
+  Joi.validate(searchParams, schema, (err, value) => {
     badRequest = (err !== null);
   });
 
