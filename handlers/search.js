@@ -74,31 +74,31 @@ function getFilters(query) {
 function searchPage(request, reply) {
   const query = request.query;
 
-  var schema = Joi.object().keys({
+  const schema = Joi.object().keys({
     page: Joi.number().integer().min(1),
     registration_date_start: Joi.date().format('YYYY-MM-DD').empty(''),
     registration_date_end: Joi.date().format('YYYY-MM-DD').empty(''),
     location: Joi.string().empty(''),
-    q: Joi.string().empty('')
+    q: Joi.string().empty(''),
   });
 
-  var searchParams = {
+  const searchParams = {
     page: query.page,
     registration_date_start: query.registration_date_start,
     registration_date_end: query.registration_date_end,
     location: query.location,
-    q: query.q
+    q: query.q,
   };
 
-  var badRequest = false;
-  Joi.validate(searchParams, schema, (err, value) => {
+  let badRequest = false;
+  Joi.validate(searchParams, schema, (err) => {
     badRequest = (err !== null);
   });
 
   if (badRequest) {
     reply(
       Boom.badRequest('invalid query')
-    )
+    );
     return;
   }
 

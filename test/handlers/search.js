@@ -88,9 +88,6 @@ describe('search handler', () => {
       mockApiResponses();
       return server.inject('/search?foo=bar&baz=51')
         .then((_response) => {
-          console.log('-----------------------------------------');
-          console.log(_response.request.response.source);
-          console.log('-----------------------------------------');
           _response.request.response.source.context.query.should.deepEqual({
             foo: 'bar',
             baz: '51',
