@@ -35,6 +35,28 @@ const routes = [
     method: 'GET',
     handler: require('../handlers/search'),
   },
+
+  {
+    path: '/problem/{id?}',
+    method: 'GET',
+    handler: require('../handlers/problem'),
+  },
+  {
+    path: '/intervention/{id?}',
+    method: 'GET',
+    handler: require('../handlers/intervention'),
+  },
+  {
+    path: '/person/{id?}',
+    method: 'GET',
+    handler: require('../handlers/person'),
+  },
+  {
+    path: '/organisation/{id?}',
+    method: 'GET',
+    handler: require('../handlers/organisation'),
+  },
+
 ];
 
 module.exports = routes;

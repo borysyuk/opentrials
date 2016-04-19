@@ -114,7 +114,7 @@ function searchPage(request, reply) {
   const query = request.query;
 
   const schema = Joi.object().keys({
-    page: Joi.number().integer().min(1),
+    page: Joi.number().integer().min(1).max(100),
     registration_date_start: Joi.date().format('YYYY-MM-DD').empty(''),
     registration_date_end: Joi.date().format('YYYY-MM-DD').empty(''),
     location: Joi.array().single(true).items(Joi.string().empty('')),
