@@ -56,24 +56,24 @@ function getPagination(url, currentPage, perPage, maxPages, totalCount) {
 
 function getFilters(query) {
   const filters = {};
-  const ensureIsArrayAndQuoteElements = (values) => (
+  const quoteElements = (values) => (
     values.map((val) => `"${val}"`)
   );
 
   if (query.problem) {
-    filters.problem = ensureIsArrayAndQuoteElements(query.problem);
+    filters.problem = quoteElements(query.problem);
   }
   if (query.intervention) {
-    filters.intervention = ensureIsArrayAndQuoteElements(query.intervention);
+    filters.intervention = quoteElements(query.intervention);
   }
   if (query.location) {
-    filters.location = ensureIsArrayAndQuoteElements(query.location);
+    filters.location = quoteElements(query.location);
   }
   if (query.person) {
-    filters.person = ensureIsArrayAndQuoteElements(query.person);
+    filters.person = quoteElements(query.person);
   }
   if (query.organisation) {
-    filters.organisation = ensureIsArrayAndQuoteElements(query.organisation);
+    filters.organisation = quoteElements(query.organisation);
   }
 
   const registrationDateStart = query.registration_date_start;
@@ -125,9 +125,7 @@ function validateQueryParams(query) {
 function searchPage(request, reply) {
   const validatedQuery = validateQueryParams(request.query);
   if (validatedQuery.error) {
-    reply(
-      Boom.badRequest('invalid query')
-    );
+    return reply(Boom.badRequest('Invalid query'), validatedQuery.error);
   }
   const query = validatedQuery.value;
 
@@ -162,6 +160,8 @@ function searchPage(request, reply) {
       Boom.badGateway('Error accessing OpenTrials API.', err)
     )
   ));
+
+  return;
 }
 
 module.exports = searchPage;
