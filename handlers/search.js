@@ -161,7 +161,7 @@ function searchPage(request, reply) {
     )
   ));
 
-  return;
+  return null;
 }
 
 module.exports = searchPage;
