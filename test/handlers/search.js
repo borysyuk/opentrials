@@ -72,22 +72,9 @@ describe('search handler', () => {
     describe('API is not OK', () => {
       it('returns error 502', () => {
         mockApiResponses({
-          search: { statusCode: 500 },
-          locations: { statusCode: 500 },
+          search: {statusCode: 500},
+          locations: {statusCode: 500},
         });
-
-        return server.inject('/search')
-          .then((_response) => {
-            _response.statusCode.should.equal(502);
-          });
-      });
-
-      it('returns error 400', () => {
-        mockApiResponses();
-        return server.inject('/search?q=test&page=aa')
-          .then((_response) => {
-            _response.statusCode.should.equal(400)
-          });
 
         return server.inject('/search')
           .then((_response) => {
@@ -97,17 +84,91 @@ describe('search handler', () => {
     });
   });
 
-  describe('GET /search?{query}', () => {
-    it('adds the query into the context', () => {
-      mockApiResponses();
-      return server.inject('/search?foo=bar&baz=51')
+  describe('Validation Errors', () => {
+    it('validate non-integer page', () => {
+      return server.inject('/search?q=test&page=ddd')
         .then((_response) => {
-          _response.request.response.source.context.query.should.deepEqual({
-            foo: 'bar',
-            baz: '51',
-          });
+          _response.statusCode.should.equal(400)
         });
     });
+
+    it('validate negative page', () => {
+      return server.inject('/search?q=test&page=-1')
+        .then((_response) => {
+          _response.statusCode.should.equal(400)
+        });
+    });
+
+    it('validate large page param', () => {
+      return server.inject('/search?q=test&page=101')
+        .then((_response) => {
+          _response.statusCode.should.equal(400)
+        });
+    });
+
+    it('validate registration_date_start as any string', () => {
+      return server.inject('/search?q=test&registration_date_start=ddd')
+        .then((_response) => {
+          _response.statusCode.should.equal(400)
+        });
+    });
+
+    it('validate registration_date_start as date in other format', () => {
+      return server.inject('/search?q=test&registration_date_start=2016/02/25')
+        .then((_response) => {
+          _response.statusCode.should.equal(400)
+        });
+    });
+
+    it('validate registration_date_end as any string', () => {
+      return server.inject('/search?q=test&registration_date_end=ddd')
+        .then((_response) => {
+          _response.statusCode.should.equal(400)
+        });
+    });
+
+    it('validate registration_date_end as date in other format', () => {
+      return server.inject('/search?q=test&registration_date_end=2016/02/25')
+        .then((_response) => {
+          _response.statusCode.should.equal(400)
+        });
+    });
+
+    it('validate gender as any string', () => {
+      return server.inject('/search?q=test&gender=some')
+        .then((_response) => {
+          _response.statusCode.should.equal(400)
+        });
+    });
+
+    it('validate has_published_results as date in other format', () => {
+      return server.inject('/search?q=test&has_published_results=maybe')
+        .then((_response) => {
+          _response.statusCode.should.equal(400)
+        });
+    });
+
+    it('validate non-integer sample_size_start', () => {
+      return server.inject('/search?q=test&sample_size_start=ddd')
+        .then((_response) => {
+          _response.statusCode.should.equal(400)
+        });
+    });
+
+    it('validate non-integer sample_size_end', () => {
+      return server.inject('/search?q=test&sample_size_end=ddd')
+        .then((_response) => {
+          _response.statusCode.should.equal(400)
+        });
+    });
+
+    it('validate unknown params', () => {
+      return server.inject('/search?q=test&some=param')
+        .then((_response) => {
+          _response.statusCode.should.equal(400)
+        });
+    });
+
   });
 
   describe('GET /search?q={queryStr}', () => {
@@ -123,7 +184,7 @@ describe('search handler', () => {
         },
       });
 
-      return server.inject('/search?q='+encodeURIComponent(queryStr))
+      return server.inject('/search?q=' + encodeURIComponent(queryStr))
         .then((_response) => {
           response = _response;
         });
@@ -154,7 +215,7 @@ describe('search handler', () => {
         },
       });
 
-      return server.inject('/search?page='+page)
+      return server.inject('/search?page=' + page)
         .then((_response) => {
           response = _response;
         });
@@ -260,7 +321,7 @@ describe('search handler', () => {
   });
 
   describe('GET /search?problem={problem}&problem={problem}', () => {
-    const searchResponse = { total_count: 0, items: [] };
+    const searchResponse = {total_count: 0, items: []};
 
     describe('single problem', () => {
       it('converts the query problem to an array', () => {
@@ -315,7 +376,7 @@ describe('search handler', () => {
   });
 
   describe('GET /search?intervention={intervention}&intervention={intervention}', () => {
-    const searchResponse = { total_count: 0, items: [] };
+    const searchResponse = {total_count: 0, items: []};
 
     describe('single intervention', () => {
       it('converts the query intervention to an array', () => {
@@ -370,7 +431,7 @@ describe('search handler', () => {
   });
 
   describe('GET /search?person={person}&person={person}', () => {
-    const searchResponse = { total_count: 0, items: [] };
+    const searchResponse = {total_count: 0, items: []};
 
     describe('single person', () => {
       it('converts the query person to an array', () => {
@@ -425,7 +486,7 @@ describe('search handler', () => {
   });
 
   describe('GET /search?organisation={organisation}&organisation={organisation}', () => {
-    const searchResponse = { total_count: 0, items: [] };
+    const searchResponse = {total_count: 0, items: []};
 
     describe('single organisation', () => {
       it('converts the query organisation to an array', () => {
@@ -481,7 +542,7 @@ describe('search handler', () => {
 
   describe('GET /search?location={locationID}&location={locationID}', () => {
     let response;
-    const searchResponse = { total_count: 0, items: [] };
+    const searchResponse = {total_count: 0, items: []};
 
     describe('single location', () => {
       it('converts the query to an array', () => {
@@ -642,7 +703,7 @@ describe('search handler', () => {
   describe('pagination', () => {
     describe('no results', () => {
       it('returns empty pagination', () => {
-        const apiResponseNoResults = { total_count: 0, items: [] };
+        const apiResponseNoResults = {total_count: 0, items: []};
         mockApiResponses({
           search: {
             response: apiResponseNoResults,
@@ -659,7 +720,7 @@ describe('search handler', () => {
 
     describe('single page', () => {
       it('returns empty pagination', () => {
-        const apiResponseSinglePage = Object.assign(apiResponse, { total_count: 5 });
+        const apiResponseSinglePage = Object.assign(apiResponse, {total_count: 5});
         mockApiResponses({
           search: {
             response: apiResponseSinglePage,
@@ -676,7 +737,7 @@ describe('search handler', () => {
 
     describe('more than 1 and less than 10 pages', () => {
       it('works as expected', () => {
-        const apiResponseLessThan10Pages = Object.assign(apiResponse, { total_count: 20 });
+        const apiResponseLessThan10Pages = Object.assign(apiResponse, {total_count: 20});
         mockApiResponses({
           search: {
             response: apiResponseLessThan10Pages,
@@ -687,19 +748,19 @@ describe('search handler', () => {
           .then((_response) => {
             const pagination = _response.request.response.source.context.pagination;
             pagination.should.deepEqual([
-              { page: 1, label: '«', url: '/search?page=1' },
-              { page: 1, label: '‹', url: '/search?page=1' },
-              { page: 1, label: 1, url: '/search?page=1' },
-              { page: 2, label: 2, url: '/search?page=2' },
-              { page: 2, label: '›', url: '/search?page=2' },
-              { page: 2, label: '»', url: '/search?page=2' },
+              {page: 1, label: '«', url: '/search?page=1'},
+              {page: 1, label: '‹', url: '/search?page=1'},
+              {page: 1, label: 1, url: '/search?page=1'},
+              {page: 2, label: 2, url: '/search?page=2'},
+              {page: 2, label: '›', url: '/search?page=2'},
+              {page: 2, label: '»', url: '/search?page=2'},
             ]);
           });
       });
     });
 
     describe('more than 10 pages', () => {
-      const apiResponseMoreThan10Pages = Object.assign({}, { total_count: 500 });
+      const apiResponseMoreThan10Pages = Object.assign({}, {total_count: 500});
 
       it('works on the beginning of the page list', () => {
         const page = 3;
@@ -712,24 +773,24 @@ describe('search handler', () => {
           }
         })
 
-        return server.inject('/search?page='+page)
+        return server.inject('/search?page=' + page)
           .then((_response) => {
             const pagination = _response.request.response.source.context.pagination;
             pagination.should.deepEqual([
-              { page: 1, label: '«', url: '/search?page=1' },
-              { page: 2, label: '‹', url: '/search?page=2' },
-              { page: 1, label: 1, url: '/search?page=1' },
-              { page: 2, label: 2, url: '/search?page=2' },
-              { page: 3, label: 3, url: '/search?page=3' },
-              { page: 4, label: 4, url: '/search?page=4' },
-              { page: 5, label: 5, url: '/search?page=5' },
-              { page: 6, label: 6, url: '/search?page=6' },
-              { page: 7, label: 7, url: '/search?page=7' },
-              { page: 8, label: 8, url: '/search?page=8' },
-              { page: 9, label: 9, url: '/search?page=9' },
-              { page: 10, label: 10, url: '/search?page=10' },
-              { page: 4, label: '›', url: '/search?page=4' },
-              { page: 50, label: '»', url: '/search?page=50' },
+              {page: 1, label: '«', url: '/search?page=1'},
+              {page: 2, label: '‹', url: '/search?page=2'},
+              {page: 1, label: 1, url: '/search?page=1'},
+              {page: 2, label: 2, url: '/search?page=2'},
+              {page: 3, label: 3, url: '/search?page=3'},
+              {page: 4, label: 4, url: '/search?page=4'},
+              {page: 5, label: 5, url: '/search?page=5'},
+              {page: 6, label: 6, url: '/search?page=6'},
+              {page: 7, label: 7, url: '/search?page=7'},
+              {page: 8, label: 8, url: '/search?page=8'},
+              {page: 9, label: 9, url: '/search?page=9'},
+              {page: 10, label: 10, url: '/search?page=10'},
+              {page: 4, label: '›', url: '/search?page=4'},
+              {page: 50, label: '»', url: '/search?page=50'},
             ])
           });
       });
@@ -745,24 +806,24 @@ describe('search handler', () => {
           }
         })
 
-        return server.inject('/search?page='+page)
+        return server.inject('/search?page=' + page)
           .then((_response) => {
             const pagination = _response.request.response.source.context.pagination;
             pagination.should.deepEqual([
-              { page: 1, label: '«', url: '/search?page=1' },
-              { page: 24, label: '‹', url: '/search?page=24' },
-              { page: 21, label: 21, url: '/search?page=21' },
-              { page: 22, label: 22, url: '/search?page=22' },
-              { page: 23, label: 23, url: '/search?page=23' },
-              { page: 24, label: 24, url: '/search?page=24' },
-              { page: 25, label: 25, url: '/search?page=25' },
-              { page: 26, label: 26, url: '/search?page=26' },
-              { page: 27, label: 27, url: '/search?page=27' },
-              { page: 28, label: 28, url: '/search?page=28' },
-              { page: 29, label: 29, url: '/search?page=29' },
-              { page: 30, label: 30, url: '/search?page=30' },
-              { page: 26, label: '›', url: '/search?page=26' },
-              { page: 50, label: '»', url: '/search?page=50' },
+              {page: 1, label: '«', url: '/search?page=1'},
+              {page: 24, label: '‹', url: '/search?page=24'},
+              {page: 21, label: 21, url: '/search?page=21'},
+              {page: 22, label: 22, url: '/search?page=22'},
+              {page: 23, label: 23, url: '/search?page=23'},
+              {page: 24, label: 24, url: '/search?page=24'},
+              {page: 25, label: 25, url: '/search?page=25'},
+              {page: 26, label: 26, url: '/search?page=26'},
+              {page: 27, label: 27, url: '/search?page=27'},
+              {page: 28, label: 28, url: '/search?page=28'},
+              {page: 29, label: 29, url: '/search?page=29'},
+              {page: 30, label: 30, url: '/search?page=30'},
+              {page: 26, label: '›', url: '/search?page=26'},
+              {page: 50, label: '»', url: '/search?page=50'},
             ])
           });
       });
@@ -778,24 +839,24 @@ describe('search handler', () => {
           }
         })
 
-        return server.inject('/search?page='+page)
+        return server.inject('/search?page=' + page)
           .then((_response) => {
             const pagination = _response.request.response.source.context.pagination;
             pagination.should.deepEqual([
-              { page: 1, label: '«', url: '/search?page=1' },
-              { page: 49, label: '‹', url: '/search?page=49' },
-              { page: 41, label: 41, url: '/search?page=41' },
-              { page: 42, label: 42, url: '/search?page=42' },
-              { page: 43, label: 43, url: '/search?page=43' },
-              { page: 44, label: 44, url: '/search?page=44' },
-              { page: 45, label: 45, url: '/search?page=45' },
-              { page: 46, label: 46, url: '/search?page=46' },
-              { page: 47, label: 47, url: '/search?page=47' },
-              { page: 48, label: 48, url: '/search?page=48' },
-              { page: 49, label: 49, url: '/search?page=49' },
-              { page: 50, label: 50, url: '/search?page=50' },
-              { page: 50, label: '›', url: '/search?page=50' },
-              { page: 50, label: '»', url: '/search?page=50' },
+              {page: 1, label: '«', url: '/search?page=1'},
+              {page: 49, label: '‹', url: '/search?page=49'},
+              {page: 41, label: 41, url: '/search?page=41'},
+              {page: 42, label: 42, url: '/search?page=42'},
+              {page: 43, label: 43, url: '/search?page=43'},
+              {page: 44, label: 44, url: '/search?page=44'},
+              {page: 45, label: 45, url: '/search?page=45'},
+              {page: 46, label: 46, url: '/search?page=46'},
+              {page: 47, label: 47, url: '/search?page=47'},
+              {page: 48, label: 48, url: '/search?page=48'},
+              {page: 49, label: 49, url: '/search?page=49'},
+              {page: 50, label: 50, url: '/search?page=50'},
+              {page: 50, label: '›', url: '/search?page=50'},
+              {page: 50, label: '»', url: '/search?page=50'},
             ])
           });
       });
@@ -803,7 +864,7 @@ describe('search handler', () => {
 
     describe('more than 100 pages', () => {
       it('should limit to 100 pages', () => {
-        const apiResponseInfinitePages = Object.assign(apiResponse, { total_count: 99999999 });
+        const apiResponseInfinitePages = Object.assign(apiResponse, {total_count: 99999999});
         mockApiResponses({
           search: {
             response: apiResponseInfinitePages,

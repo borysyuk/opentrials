@@ -7,14 +7,6 @@ const trials = require('../agents/trials');
 const locations = require('../agents/locations');
 const Joi = require('joi');
 
-function ensureIsArray(object) {
-  let result = object;
-  if (result !== undefined && !Array.isArray(result)) {
-    result = [result];
-  }
-  return result;
-}
-
 function getPagination(url, currentPage, perPage, maxPages, totalCount) {
   const getPageUrl = (pageNumber) => {
     const pageUrl = _.omit(url, 'search');
@@ -65,7 +57,7 @@ function getPagination(url, currentPage, perPage, maxPages, totalCount) {
 function getFilters(query) {
   const filters = {};
   const ensureIsArrayAndQuoteElements = (values) => (
-    ensureIsArray(values).map((val) => `"${val}"`)
+    values.map((val) => `"${val}"`)
   );
 
   if (query.problem) {
@@ -104,68 +96,46 @@ function getFilters(query) {
 
   const hasPublishedResults = query.has_published_results;
   if (hasPublishedResults) {
-    filters.has_published_results = (hasPublishedResults === 'true');
+    filters.has_published_results = hasPublishedResults;
   }
 
   return filters;
 }
 
-function searchPage(request, reply) {
-  const query = request.query;
-
+function validateQueryParams(query) {
   const schema = Joi.object().keys({
-    page: Joi.number().integer().min(1),
-    registration_date_start: Joi.date().format('YYYY-MM-DD').empty(''),
-    registration_date_end: Joi.date().format('YYYY-MM-DD').empty(''),
+    page: Joi.number().integer().min(1).max(100),
+    registration_date_start: Joi.date().format('YYYY-MM-DD').empty('').raw(),
+    registration_date_end: Joi.date().format('YYYY-MM-DD').empty('').raw(),
     location: Joi.array().single(true).items(Joi.string().empty('')),
     q: Joi.string().empty(''),
+    problem: Joi.array().single(true).items(Joi.string().empty('')),
+    intervention: Joi.array().single(true).items(Joi.string().empty('')),
+    person: Joi.array().single(true).items(Joi.string().empty('')),
+    organisation: Joi.array().single(true).items(Joi.string().empty('')),
+    gender: Joi.valid(['male', 'female']).empty(''),
+    has_published_results: Joi.boolean().empty(''),
     sample_size_start: Joi.number().integer().empty(''),
     sample_size_end: Joi.number().integer().empty(''),
   });
 
-  const searchParams = {
-    page: query.page,
-    registration_date_start: query.registration_date_start,
-    registration_date_end: query.registration_date_end,
-    location: query.location,
-    q: query.q,
-    sample_size_start: query.sample_size_start,
-    sample_size_end: query.sample_size_end,
-  };
+  return Joi.validate(query, schema);
+}
 
-  let badRequest = false;
-  Joi.validate(searchParams, schema, (err) => {
-    badRequest = (err !== null);
-  });
-
-  if (badRequest) {
+function searchPage(request, reply) {
+  const validatedQuery = validateQueryParams(request.query);
+  if (validatedQuery.error) {
     reply(
       Boom.badRequest('invalid query')
     );
-    return;
   }
+  const query = validatedQuery.value;
 
   const queryStr = query.q;
   const page = (query.page) ? parseInt(query.page, 10) : undefined;
   const perPage = 10;
   const maxPages = 100;
   const filters = getFilters(query);
-
-  if (query.problem !== undefined) {
-    query.problem = ensureIsArray(query.problem);
-  }
-  if (query.intervention !== undefined) {
-    query.intervention = ensureIsArray(query.intervention);
-  }
-  if (query.location !== undefined) {
-    query.location = ensureIsArray(query.location);
-  }
-  if (query.person !== undefined) {
-    query.person = ensureIsArray(query.person);
-  }
-  if (query.organisation !== undefined) {
-    query.organisation = ensureIsArray(query.organisation);
-  }
 
   Promise.all([
     trials.search(queryStr, page, perPage, filters),
