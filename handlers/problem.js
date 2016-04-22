@@ -1,23 +1,23 @@
 'use strict';
 
 const Boom = require('boom');
-const trials = require('../agents/trials');
+const problems = require('../agents/problems');
 
-function trialsDetails(request, reply) {
-  const trialId = request.params.id;
+function problemsDetails(request, reply) {
+  const problemId = request.params.id;
 
-  trials.get(trialId).then((_trial) => {
-    reply.view('trials-details', {
-      title: _trial.public_title,
-      trial: _trial,
+  problems.get(problemId).then((_problem) => {
+    reply.view('problems-details', {
+      title: _problem.name,
+      problem: _problem,
     });
   }).catch((err) => {
     if (err.status === 404) {
-      reply(Boom.notFound('Trial not found.', err));
+      reply(Boom.notFound('Problem not found.', err));
     } else {
       reply(Boom.badGateway('Error accessing OpenTrials API.', err));
     }
   });
 }
 
-module.exports = trialsDetails;
+module.exports = problemsDetails;

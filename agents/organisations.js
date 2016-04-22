@@ -1,11 +1,13 @@
+'use strict';
+
 const opentrialsApi = require('../config').opentrialsApi;
 
-function get(organisationId) {
+function getOrganisation(organisationId) {
   return opentrialsApi
     .then((client) => client.organisations.get({ id: organisationId }))
     .then((response) => response.obj);
 }
 
 module.exports = {
-  get: get,
+  get: getOrganisation,
 };

@@ -1,0 +1,23 @@
+{% extends "layouts/two-columns.html" %}
+
+{% block bannerFooter %}
+<ul class="overview-list">
+  <li>
+      <span class="date">
+        Registration: {{ intervention.registration_date | formatDate }}
+      </span>
+  </li>
+</ul>
+{% endblock %}
+
+{% block main %}
+<article>
+  <h2>Intervention description</h2>
+  <ul class="overview-list">
+    <li>{{ intervention.name }}</li>
+  </ul>
+</article>
+
+<aside>
+</aside>
+{% endblock %}

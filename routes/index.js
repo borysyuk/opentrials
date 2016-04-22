@@ -37,22 +37,22 @@ const routes = [
   },
 
   {
-    path: '/problem/{id?}',
+    path: '/problems/{id?}',
     method: 'GET',
     handler: require('../handlers/problem'),
   },
   {
-    path: '/intervention/{id?}',
+    path: '/interventions/{id?}',
     method: 'GET',
     handler: require('../handlers/intervention'),
   },
   {
-    path: '/person/{id?}',
+    path: '/persons/{id?}',
     method: 'GET',
     handler: require('../handlers/person'),
   },
   {
-    path: '/organisation/{id?}',
+    path: '/organisations/{id?}',
     method: 'GET',
     handler: require('../handlers/organisation'),
   },
