@@ -26,7 +26,7 @@ const routes = [
     handler: require('../handlers/about'),
   },
   {
-    path: '/trials/{id?}',
+    path: '/trials/{id}',
     method: 'GET',
     handler: require('../handlers/trials'),
   },
@@ -37,22 +37,22 @@ const routes = [
   },
 
   {
-    path: '/problems/{id?}',
+    path: '/problems/{id}',
     method: 'GET',
     handler: require('../handlers/problem'),
   },
   {
-    path: '/interventions/{id?}',
+    path: '/interventions/{id}',
     method: 'GET',
     handler: require('../handlers/intervention'),
   },
   {
-    path: '/persons/{id?}',
+    path: '/persons/{id}',
     method: 'GET',
     handler: require('../handlers/person'),
   },
   {
-    path: '/organisations/{id?}',
+    path: '/organisations/{id}',
     method: 'GET',
     handler: require('../handlers/organisation'),
   },

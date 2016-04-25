@@ -88,11 +88,6 @@ describe('search handler', () => {
           .then((_response) => {
             _response.statusCode.should.equal(400)
           });
-
-        return server.inject('/search')
-          .then((_response) => {
-            _response.statusCode.should.equal(502);
-          });
       });
     });
   });
@@ -228,7 +223,7 @@ describe('search handler', () => {
         },
       });
 
-      return server.inject('/search?q='+encodeURIComponent(queryStr))
+      return server.inject('/search?q=' + encodeURIComponent(queryStr))
         .then((_response) => {
           response = _response;
         });
@@ -259,7 +254,7 @@ describe('search handler', () => {
         },
       });
 
-      return server.inject('/search?page='+page)
+      return server.inject('/search?page=' + page)
         .then((_response) => {
           response = _response;
         });
@@ -817,7 +812,7 @@ describe('search handler', () => {
           }
         })
 
-        return server.inject('/search?page='+page)
+        return server.inject('/search?page=' + page)
           .then((_response) => {
             const pagination = _response.request.response.source.context.pagination;
             pagination.should.deepEqual([
@@ -850,7 +845,7 @@ describe('search handler', () => {
           }
         })
 
-        return server.inject('/search?page='+page)
+        return server.inject('/search?page=' + page)
           .then((_response) => {
             const pagination = _response.request.response.source.context.pagination;
             pagination.should.deepEqual([
@@ -883,7 +878,7 @@ describe('search handler', () => {
           }
         })
 
-        return server.inject('/search?page='+page)
+        return server.inject('/search?page=' + page)
           .then((_response) => {
             const pagination = _response.request.response.source.context.pagination;
             pagination.should.deepEqual([
