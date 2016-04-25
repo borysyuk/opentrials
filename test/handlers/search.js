@@ -223,7 +223,7 @@ describe('search handler', () => {
         },
       });
 
-      return server.inject('/search?q=' + encodeURIComponent(queryStr))
+      return server.inject('/search?q='+encodeURIComponent(queryStr))
         .then((_response) => {
           response = _response;
         });
@@ -254,7 +254,7 @@ describe('search handler', () => {
         },
       });
 
-      return server.inject('/search?page=' + page)
+      return server.inject('/search?page='+page)
         .then((_response) => {
           response = _response;
         });
@@ -812,7 +812,7 @@ describe('search handler', () => {
           }
         })
 
-        return server.inject('/search?page=' + page)
+        return server.inject('/search?page='+page)
           .then((_response) => {
             const pagination = _response.request.response.source.context.pagination;
             pagination.should.deepEqual([
@@ -845,7 +845,7 @@ describe('search handler', () => {
           }
         })
 
-        return server.inject('/search?page=' + page)
+        return server.inject('/search?page='+page)
           .then((_response) => {
             const pagination = _response.request.response.source.context.pagination;
             pagination.should.deepEqual([
@@ -878,7 +878,7 @@ describe('search handler', () => {
           }
         })
 
-        return server.inject('/search?page=' + page)
+        return server.inject('/search?page='+page)
           .then((_response) => {
             const pagination = _response.request.response.source.context.pagination;
             pagination.should.deepEqual([

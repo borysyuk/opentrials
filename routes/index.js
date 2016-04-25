@@ -28,7 +28,12 @@ const routes = [
   {
     path: '/trials/{id}',
     method: 'GET',
-    handler: require('../handlers/trials'),
+    handler: require('../handlers/trials').getTrial,
+  },
+  {
+    path: '/trials/{trialId}/records/{id}',
+    method: 'GET',
+    handler: require('../handlers/trials').getRecord,
   },
   {
     path: '/search',
