@@ -4,7 +4,6 @@ const URL = require('url');
 const Boom = require('boom');
 const _ = require('lodash');
 const trials = require('../agents/trials');
-const locations = require('../agents/locations');
 const Joi = require('joi');
 
 function getPagination(url, currentPage, perPage, maxPages, totalCount) {
@@ -102,49 +101,19 @@ function getFilters(query) {
   return filters;
 }
 
-function validateQueryParams(query) {
-  const schema = Joi.object().keys({
-    page: Joi.number().integer().min(1).max(100),
-    registration_date_start: Joi.date().format('YYYY-MM-DD').empty('').raw(),
-    registration_date_end: Joi.date().format('YYYY-MM-DD').empty('').raw(),
-    location: Joi.array().single(true).items(Joi.string().empty('')),
-    q: Joi.string().empty(''),
-    problem: Joi.array().single(true).items(Joi.string().empty('')),
-    intervention: Joi.array().single(true).items(Joi.string().empty('')),
-    person: Joi.array().single(true).items(Joi.string().empty('')),
-    organisation: Joi.array().single(true).items(Joi.string().empty('')),
-    gender: Joi.valid(['male', 'female']).empty(''),
-    has_published_results: Joi.boolean().empty(''),
-    sample_size_start: Joi.number().integer().empty(''),
-    sample_size_end: Joi.number().integer().empty(''),
-  });
-
-  return Joi.validate(query, schema);
-}
-
 function searchPage(request, reply) {
-  const validatedQuery = validateQueryParams(request.query);
-  if (validatedQuery.error) {
-    return reply(Boom.badRequest('Invalid query'), validatedQuery.error);
-  }
-  const query = validatedQuery.value;
-
+  const query = request.query;
   const queryStr = query.q;
   const page = (query.page) ? parseInt(query.page, 10) : undefined;
   const perPage = 10;
   const maxPages = 100;
   const filters = getFilters(query);
 
-  Promise.all([
-    trials.search(queryStr, page, perPage, filters),
-    locations.list(),
-  ]).then((responses) => {
-    const trialsResponse = responses[0];
-    const locationsResponse = responses[1];
+  trials.search(queryStr, page, perPage, filters).then((_trials) => {
     const currentPage = page || 1;
     const pagination = getPagination(request.url, currentPage,
                                      perPage, maxPages,
-                                     trialsResponse.total_count);
+                                     _trials.total_count);
 
     reply.view('search', {
       title: 'Search',
@@ -152,16 +121,34 @@ function searchPage(request, reply) {
       currentPage,
       pagination,
       advancedSearchIsVisible: Object.keys(filters).length > 0,
-      trials: trialsResponse,
-      locations: locationsResponse,
+      trials: _trials,
     });
   }).catch((err) => (
     reply(
       Boom.badGateway('Error accessing OpenTrials API.', err)
     )
   ));
-
-  return null;
 }
 
-module.exports = searchPage;
+module.exports = {
+  handler: searchPage,
+  config: {
+    validate: {
+      query: {
+        page: Joi.number().integer().min(1).max(100),
+        registration_date_start: Joi.date().format('YYYY-MM-DD').empty('').raw(),
+        registration_date_end: Joi.date().format('YYYY-MM-DD').empty('').raw(),
+        location: Joi.array().single(true).items(Joi.string().empty('')),
+        q: Joi.string().empty(''),
+        problem: Joi.array().single(true).items(Joi.string().empty('')),
+        intervention: Joi.array().single(true).items(Joi.string().empty('')),
+        person: Joi.array().single(true).items(Joi.string().empty('')),
+        organisation: Joi.array().single(true).items(Joi.string().empty('')),
+        gender: Joi.valid(['male', 'female']).empty(''),
+        has_published_results: Joi.boolean().empty(''),
+        sample_size_start: Joi.number().integer().empty(''),
+        sample_size_end: Joi.number().integer().empty(''),
+      },
+    },
+  },
+};
