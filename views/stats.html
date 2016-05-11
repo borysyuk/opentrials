@@ -1,0 +1,37 @@
+{% extends 'layouts/base.html' %}
+
+{% block main %}
+<article class="result">
+  <div class="stats-node">
+    <h3>Number of trials: <span id="trialsCount"></span></h3>
+  </div>
+
+  <div class="stats-node">
+    <h3>Number of trials per registry:</h3>
+    <ul class="meta" id="trialsPerRegistry">
+    </ul>
+  </div>
+
+  <div class="stats-node">
+    <h3>Number of trials per year:</h3>
+    <ul class="meta" id="trialsPerYear">
+    </ul>
+  </div>
+
+  <div class="stats-node">
+    <h3>Top 10 locations with most trials:</h3>
+    <ul class="meta" id="topLocation">
+    </ul>
+  </div>
+
+  <div class="stats-node">
+    <h3>Date when we updated each registry: </h3>
+    <ul class="meta" id="updatedRegistry">
+    </ul>
+  </div>
+
+  <script>
+    window.page = 'stats';
+  </script>
+</article>
+{% endblock %}

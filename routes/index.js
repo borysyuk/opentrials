@@ -78,6 +78,11 @@ const routes = [
     method: 'GET',
     handler: require('../handlers/logout'),
   },
+  {
+    path: '/stats',
+    method: 'GET',
+    handler: require('../handlers/stats'),
+  },
 ];
 
 module.exports = routes;
