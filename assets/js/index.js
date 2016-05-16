@@ -1,40 +1,5 @@
 (function() {
 
-function buildStatsPage() {
-  $.ajax({
-    url: OPENTRIALS_API_URL + '/stats',
-    dataType: 'json',
-    cache: true,
-  }).done(function( data ) {
-    $('#trialsCount').html(data.trialsCount);
-
-    $.each(data.trialsPerRegistry, function(i, item) {
-      var li = $('<li/>').appendTo('#trialsPerRegistry');
-      $('<dt></dt>').text(item.registry+':').appendTo(li);
-      $('<dd></dd>').text(item.count).appendTo(li);
-    });
-
-    $.each(data.trialsPerYear, function(i, item) {
-      var li = $('<li/>').appendTo('#trialsPerYear');
-      $('<dt></dt>').text(item.year+':').appendTo(li);
-      $('<dd></dd>').text(item.count).appendTo(li);
-    });
-
-    $.each(data.topLocations, function(i, item) {
-      var li = $('<li/>').appendTo('#topLocation');
-      $('<dt></dt>').text(item.name+':').appendTo(li);
-      $('<dd></dd>').text(item.count).appendTo(li);
-    });
-
-    $.each(data.dateRegistry, function(i, item) {
-      var displayDate = (item.updatedate)? new Date(item.updatedate) : '-';
-      var li = $('<li/>').appendTo('#updatedRegistry');
-      $('<dt></dt>').text(item.name+':').appendTo(li);
-      $('<dd></dd>').text(displayDate).appendTo(li);
-    });
-  });
-}
-
 function setupSelect2For(name) {
   var perPage = 10;
 
@@ -102,10 +67,6 @@ $(document).ready(function() {
       .removeAttr('checked')
       .removeAttr('selected');
   });
-
-  if (window.page == 'stats') {
-    buildStatsPage();
-  }
 
   setupSelect2For('problem');
   setupSelect2For('intervention');
