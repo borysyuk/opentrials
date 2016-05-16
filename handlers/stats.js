@@ -11,7 +11,6 @@ function getStats(request, reply) {
   }).catch((err) => {
     reply(Boom.badGateway('Error accessing OpenTrials API.', err));
   });
-
 }
 
 module.exports = getStats;
