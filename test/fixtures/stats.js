@@ -22,11 +22,11 @@ function getStats() {
         count: 2,
       }
     ],
-    dateRegistry: [
+    sourcesLatestUpdatedDate: [
       {
         id: uuid.v1(),
         name: 'Registry',
-        updatedate: new Date('2016-01-01'),
+        latest_updated_date: new Date('2016-01-01'),
       }
     ],
   };

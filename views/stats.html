@@ -45,10 +45,10 @@
   <div class="stats-node">
     <h3>Date when we updated each registry: </h3>
     <ul class="meta" id="updatedRegistry">
-      {% for dateRegistry in stats.dateRegistry %}
+      {% for sourceLatestUpdatedDate in stats.sourcesLatestUpdatedDate %}
       <li>
-        <dt>{{ dateRegistry.name }}</dt>
-        <dd>{{ dateRegistry.updatedate | formatDate }}</dd>
+        <dt>{{ sourceLatestUpdatedDate.name }}</dt>
+        <dd>{{ sourceLatestUpdatedDate.latest_updated_date | formatDate }}</dd>
       </li>
       {% endfor %}
     </ul>
