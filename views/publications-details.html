@@ -1,0 +1,40 @@
+{% extends "layouts/two-columns.html" %}
+
+{% block main %}
+<article>
+  This publication was last updated on
+  <time datetime={{record.updated_at}}>{{ publication.updated_at | formatDate }}</time>
+
+  <h2>Publication description</h2>
+  <ul class="overview-list">
+    <li>{{ publication.title }}</li>
+  </ul>
+
+  <h2>Source</h2>
+  <a href="{{publication.source_url}}">{{publication.source.name}}</a>
+
+  <h2>Abstract</h2>
+  {{publication.abstract}}
+
+  <h2>Authors</h2>
+  <ul class="overview-list">
+    {% for author in publication.authors %}
+      <li>{{ author }}</li>
+    {% endfor %}
+  </ul>
+
+  <h2>Facts</h2>
+  <ul class="overview-list">
+    {% for fact in publication.facts %}
+    <li>{{ fact }}</li>
+    {% endfor %}
+  </ul>
+
+  <h2>Slug</h2>
+  {{publication.slug}}
+
+</article>
+
+<aside>
+</aside>
+{% endblock %}

@@ -78,5 +78,23 @@
       </dd>
     {% endfor %}
   </dl>
+
+  <h2>Publications</h2>
+  <dl>
+    {% for publication in trial.publications %}
+      <dt>
+        <a href="/publications/{{ publication.attributes.id }}">
+          {{ publication.attributes.title }}
+       </a>
+      </dt>
+      <dd>
+        Last updated on
+        <time datetime="{{ publication.attributes.updated_at }}">
+          {{ publication.attributes.updated_at | formatDate }}
+        </time>
+      </dd>
+    {% endfor %}
+  </dl>
+
 </aside>
 {% endblock %}
