@@ -5,7 +5,7 @@ function getTrial() {
     id: uuid.v1(),
     primary_register: 'primary_register',
     primary_id: 'primary_id',
-    secondary_ids: JSON.stringify([]),
+    identifiers: JSON.stringify({}),
     registration_date: new Date('2016-01-01'),
     public_title: 'public_title',
     brief_summary: 'brief_summary',
