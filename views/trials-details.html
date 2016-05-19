@@ -82,11 +82,11 @@
   <h2>Publications</h2>
   <ul>
     {% for publication in trial.publications %}
-      <dt>
+      <li>
         <a href="/publications/{{ publication.attributes.id }}">
           {{ publication.attributes.title }}
-       </a>
-      </dt>
+        </a>
+      </li>
     {% endfor %}
   </ul>
 

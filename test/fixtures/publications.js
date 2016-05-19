@@ -1,7 +1,7 @@
 const uuid = require('node-uuid');
 
 function getPublication() {
-  const problem = {
+  const publication = {
     id: uuid.v1(),
     title: 'test publication',
     source: {
@@ -14,7 +14,7 @@ function getPublication() {
     updated_at: new Date('2016-02-01'),
   };
 
-  return problem;
+  return publication;
 }
 
 module.exports = getPublication;
