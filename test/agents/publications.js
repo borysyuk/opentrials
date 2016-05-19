@@ -1,4 +1,5 @@
 'use strict';
+
 const publications = require('../../agents/publications');
 
 describe('Publications', () => {

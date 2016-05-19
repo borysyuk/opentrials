@@ -10,9 +10,9 @@ describe('publications handler', () => {
       let response;
 
       before(() => {
-        apiServer.get('/publications/'+publication.id).reply(200, publication);
+        apiServer.get(`/publications/${publication.id}`).reply(200, publication);
 
-        return server.inject('/publications/'+publication.id)
+        return server.inject(`/publications/${publication.id}`)
           .then((_response) => {
             response = _response;
           });

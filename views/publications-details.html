@@ -2,9 +2,6 @@
 
 {% block main %}
 <article>
-  This publication was last updated on
-  <time datetime={{record.updated_at}}>{{ publication.updated_at | formatDate }}</time>
-
   <h2>Publication description</h2>
   <ul class="overview-list">
     <li>{{ publication.title }}</li>
@@ -29,9 +26,6 @@
     <li>{{ fact }}</li>
     {% endfor %}
   </ul>
-
-  <h2>Slug</h2>
-  {{publication.slug}}
 
 </article>
 
