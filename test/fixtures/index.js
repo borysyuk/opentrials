@@ -7,6 +7,7 @@ const fixtures = {
   getRecord: require('./trials').getRecord,
   getLocation: require('./locations'),
   getPublication: require('./publications'),
+  getStats: require('./stats'),
 }
 
 module.exports = fixtures;
