@@ -1,4 +1,4 @@
-.result {
+.result, .result-small {
   padding-top: $base-spacing /2;
   padding-bottom: $base-spacing;
   margin-bottom: $base-spacing /2;
@@ -59,6 +59,13 @@
   }
 }
 
+.result-small {
+  padding-bottom: 0;
+
+  h2.title  {
+    font-size: em(14);
+  }
+}
 .pagination {
   text-align: center;
 }
