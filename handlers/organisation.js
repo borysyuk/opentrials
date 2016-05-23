@@ -12,7 +12,7 @@ function organisationsDetails(request, reply) {
       reply.view('organisations-details', {
         title: _organisation.name,
         organisation: _organisation,
-        trials: _trials
+        trials: _trials,
       });
     });
   }).catch((err) => {

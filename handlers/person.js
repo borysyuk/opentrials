@@ -12,7 +12,7 @@ function personsDetails(request, reply) {
       reply.view('persons-details', {
         title: _person.name,
         person: _person,
-        trials: _trials
+        trials: _trials,
       });
     });
   }).catch((err) => {

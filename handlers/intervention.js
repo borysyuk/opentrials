@@ -12,7 +12,7 @@ function interventionsDetails(request, reply) {
       reply.view('interventions-details', {
         title: _intervention.name,
         intervention: _intervention,
-        trials: _trials
+        trials: _trials,
       });
     });
   }).catch((err) => {
