@@ -18,7 +18,7 @@ describe('interventions handler', () => {
         mockApiResponses({
           search: {
             query: {
-              q: `intervention:${intervention.name}`,
+              q: `intervention:"${intervention.name}"`,
               page: 1,
             },
             response: trials,

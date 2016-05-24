@@ -18,7 +18,7 @@ describe('organisations handler', () => {
         mockApiResponses({
           search: {
             query: {
-              q: `organisation:${organisation.name}`,
+              q: `organisation:"${organisation.name}"`,
               page: 1,
             },
             response: trials,

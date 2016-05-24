@@ -18,7 +18,7 @@ describe('conditions handler', () => {
         mockApiResponses({
           search: {
             query: {
-              q: `condition:${condition.name}`,
+              q: `condition:"${condition.name}"`,
               page: 1,
             },
             response: trials,

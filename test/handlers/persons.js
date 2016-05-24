@@ -18,7 +18,7 @@ describe('persons handler', () => {
         mockApiResponses({
           search: {
             query: {
-              q: `person:${person.name}`,
+              q: `person:"${person.name}"`,
               page: 1,
             },
             response: trials,
