@@ -58,7 +58,7 @@ function searchTrials(query, page, perPage, filters) {
 }
 
 function searchTrialsByEntity(entityType, entityName) {
-  return searchTrials(`${entityType}:${entityName}`, 1, 10);
+  return searchTrials(`${entityType}:"${entityName.replace('"', '\"')}"`, 1, 10);
 }
 
 module.exports = {
