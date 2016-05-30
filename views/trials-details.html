@@ -183,8 +183,8 @@
   <ul>
     {% for publication in trial.publications %}
       <li>
-        <a href="/publications/{{ publication.attributes.id }}">
-          {{ publication.attributes.title }}
+        <a href="/publications/{{ publication.id }}">
+          {{ publication.title }}
         </a>
       </li>
     {% endfor %}
