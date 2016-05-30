@@ -1,11 +1,11 @@
 'use strict';
 const server = require('../../server');
 
-describe('persons handler', () => {
-  describe('GET /persons/{id}', () => {
+describe('conditions handler', () => {
+  describe('GET /conditions/{id}', () => {
     describe('API is OK', () => {
-      const person = JSON.parse(JSON.stringify(
-        fixtures.getPerson()
+      const condition = JSON.parse(JSON.stringify(
+        fixtures.getCondition()
       ));
       const trials = JSON.parse(JSON.stringify(
         fixtures.searchTrialsByEntity()
@@ -13,19 +13,19 @@ describe('persons handler', () => {
       let response;
 
       before(() => {
-        apiServer.get('/persons/'+person.id).reply(200, person);
+        apiServer.get(`/conditions/${condition.id}`).reply(200, condition);
 
         mockApiResponses({
           search: {
             query: {
-              q: `person:"${person.name}"`,
+              q: `condition:"${condition.name}"`,
               page: 1,
             },
             response: trials,
           },
         });
 
-        return server.inject('/persons/'+person.id)
+        return server.inject('/conditions/'+condition.id)
           .then((_response) => {
             response = _response;
           });
@@ -35,13 +35,13 @@ describe('persons handler', () => {
         response.statusCode.should.equal(200)
       });
 
-      it('uses the "persons-list" template', () => (
-        response.request.response.source.template.should.equal('persons-details')
+      it('uses the "conditions-list" template', () => (
+        response.request.response.source.template.should.equal('conditions-details')
       ));
 
-      it('adds the requested person to the context', () => {
+      it('adds the requested condition to the context', () => {
         const context = response.request.response.source.context;
-        context.person.should.deepEqual(person);
+        context.condition.should.deepEqual(condition);
       });
 
       it('adds the trials to the context', () => {
@@ -49,15 +49,15 @@ describe('persons handler', () => {
         context.trials.should.deepEqual(trials);
       });
 
-      it('sets the title to the person.name', () => {
+      it('sets the title to the condition.name', () => {
         const context = response.request.response.source.context;
-        context.title.should.equal(person.name);
+        context.title.should.equal(condition.name);
       });
 
-      it('returns 404 when person doesnt exist', () => {
-        apiServer.get('/persons/foo').reply(404);
+      it('returns 404 when condition doesnt exist', () => {
+        apiServer.get('/conditions/foo').reply(404);
 
-        return server.inject('/persons/foo')
+        return server.inject('/conditions/foo')
           .then((_response) => {
             _response.statusCode.should.equal(404);
           });
@@ -66,9 +66,9 @@ describe('persons handler', () => {
 
     describe('API is not OK', () => {
       it('returns error 502', () => {
-        apiServer.get('/persons/foo').reply(500);
+        apiServer.get('/conditions/foo').reply(500);
 
-        return server.inject('/persons/foo')
+        return server.inject('/conditions/foo')
           .then((_response) => {
             _response.statusCode.should.equal(502);
           });
