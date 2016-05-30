@@ -1,7 +1,7 @@
 'use strict';
 
-const path = require('path');
 require('dotenv').config();
+const path = require('path');
 
 const nunjucksHapi = require('nunjucks-hapi');
 const viewFilters = require('../views/filters');
