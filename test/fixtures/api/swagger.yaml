@@ -122,6 +122,31 @@ paths:
           schema:
             $ref: "#/definitions/ErrorResponse"
 
+  /publications/{id}:
+    x-swagger-router-controller: publications
+    get:
+      tags:
+        - publications
+      description: Returns publication details
+      operationId: get
+      parameters:
+        - name: id
+          in: path
+          description: ID of the publictaion
+          required: true
+          type: string
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/Publication"
+        "404":
+          description: Publictaion not found
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
   /conditions/{id}:
     x-swagger-router-controller: conditions
     get:
@@ -286,31 +311,6 @@ paths:
           schema:
             $ref: "#/definitions/ErrorResponse"
 
-  /publications/{id}:
-    x-swagger-router-controller: publications
-    get:
-      tags:
-        - publications
-      description: Returns publication details
-      operationId: get
-      parameters:
-        - name: id
-          in: path
-          description: ID of the publication
-          required: true
-          type: string
-      responses:
-        "200":
-          description: Success
-          schema:
-            $ref: "#/definitions/Publication"
-        "404":
-          description: Publication not found
-        default:
-          description: Error
-          schema:
-            $ref: "#/definitions/ErrorResponse"
-
 definitions:
   Stats:
     type: object
@@ -385,8 +385,6 @@ definitions:
       - id
       - url
       - public_title
-      - brief_summary
-      - registration_date
       - has_discrepancies
       - locations
       - interventions
@@ -420,6 +418,14 @@ definitions:
       registration_date:
         type: string
         format: date-time
+      recruitment_status:
+        type: string
+        enum:
+          - pending
+          - recruiting
+          - suspended
+          - complete
+          - other
       locations:
         type: array
         items:
@@ -447,7 +453,7 @@ definitions:
       publications:
         type: array
         items:
-          $ref: '#/definitions/TrialPublication'
+          $ref: '#/definitions/PublicationSummary'
 
   TrialLocation:
     allOf:
@@ -568,54 +574,6 @@ definitions:
     items:
       $ref: '#/definitions/Record'
 
-  TrialPublication:
-    required:
-      - attributes
-    properties:
-      attributes:
-        $ref: '#/definitions/Publication'
-
-  Publication:
-    required:
-      - id
-      - source_url
-      - title
-      - abstract
-    properties:
-      id:
-        type: string
-      source:
-        $ref: '#/definitions/Source'
-      created_at:
-        type: string
-        format: date-time
-      updated_at:
-        type: string
-        format: date-time
-      source_url:
-        type: string
-      title:
-        type: string
-      abstract:
-        type: string
-      authors:
-        type: array
-        items: {
-          "type": "string"
-        }
-      journal:
-        type: string
-      date:
-        type: string
-        format: date-time
-      slug:
-        type: string
-      facts:
-        type: array
-        items: {
-          "type": "string"
-        }
-
   Record:
     required:
       - id
@@ -645,12 +603,62 @@ definitions:
         type: object
       public_title:
         type: string
+      recruitment_status:
+        type: string
+        enum:
+          - pending
+          - recruiting
+          - suspended
+          - complete
+          - other
       created_at:
         type: string
         format: date-time
       updated_at:
         type: string
         format: date-time
+
+  Publication:
+    required:
+      - id
+      - source
+      - source_url
+      - title
+      - abstract
+    properties:
+      id:
+        type: string
+      source:
+        $ref: '#/definitions/Source'
+      created_at:
+        type: string
+        format: date-time
+      updated_at:
+        type: string
+        format: date-time
+      source_url:
+        type: string
+      title:
+        type: string
+      abstract:
+        type: string
+      authors:
+        type: array
+        items:
+          type: string
+
+      journal:
+        type: string
+      date:
+        type: string
+        format: date-time
+      slug:
+        type: string
+      facts:
+        type: array
+        items:
+          type: string
+
 
   RecordSummary:
     required:
@@ -664,6 +672,20 @@ definitions:
         type: string
       source:
         $ref: '#/definitions/Source'
+
+  PublicationSummary:
+    required:
+      - id
+      - title
+      - source
+    properties:
+      id:
+        type: string
+      title:
+        type: string
+      source:
+        $ref: '#/definitions/Source'
+
   Source:
     required:
       - id
