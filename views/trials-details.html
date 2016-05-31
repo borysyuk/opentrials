@@ -7,29 +7,84 @@
         Registration: {{ trial.registration_date | formatDate }}
       </span>
     </li>
+    {% if trial.target_sample_size %}
+    <li>
+      <span class="number">{{ trial.target_sample_size }}</span> Participants
+    </li>
+    {% else %}
+    <li class="disabled">
+      <em>No data for "number of participants"</em>
+    </li>
+    {% endif %}
+    {% if trial.gender %}
+    <li>
+      {% if trial.gender == 'male' %}
+      <span class="men">
+        Male
+      </span>
+      {% elif trial.gender == 'female' %}
+      <span class="women">
+        Female
+      </span>
+      {% elif trial.gender == 'both' %}
+      <span class="men-and-women">
+        Male &amp; Female
+      </span>
+      {% else %}
+      <span class="men-and-women">
+        N/A
+      </span>
+      {% endif %}
+    </li>
+    {% else %}
+    <li class="disabled">
+      <em>No data for "gender"</em>
+    </li>
+    {% endif %}
   </ul>
 {% endblock %}
 
 {% block main %}
+
+
+{% macro no_data_message(name, thing='') -%}
+  <h2 class="disabled">{{ name }}</h2>
+  <p class="disabled">
+    We have no {{ thing }} for this trial. Help us by <a href="{{ contributeDataUrl }}">contributing data</a>.
+  </p>
+{%- endmacro %}
+
 <article>
+  {% if trial.conditions.length != 0 %}
   <h2>Conditions</h2>
   <ul class="overview-list">
     {% for condition in trial.conditions %}
-      <li><a href="/conditions/{{ condition.attributes.id }}">{{ condition.attributes.name }}</a></li>
+      <li><a href="/conditions/{{ condition.id }}">{{ condition.name }}</a></li>
     {% endfor %}
   </ul>
+  {% else %}
+  {{ no_data_message('Conditions', thing='"conditions" data') }}
+  {% endif %}
 
+  {% if trial.interventions.length != 0 %}
   <h2>Treatments</h2>
   <ul class="overview-list">
     {% for intervention in trial.interventions %}
-      <li><a href="/interventions/{{ intervention.attributes.id }}">{{ intervention.attributes.name }}</a></li>
+      <li><a href="/interventions/{{ intervention.id }}" class="{{ intervention.type }}">{{ intervention.name }}</a></li>
     {% endfor %}
   </ul>
+  {% else %}
+  {{ no_data_message('Treatments', thing='"treatment" data') }}
+  {% endif %}
 
+  {% if trial.brief_summary.length != 0 %}
   <h2>Lay summary</h2>
   <p>
     {{ trial.brief_summary }}
   </p>
+  {% else %}
+  {{ no_data_message('Lay summary', thing='"lay summary"') }}
+  {% endif %}
 </article>
 
 <aside>
@@ -37,32 +92,77 @@
     <li>
       <a href="{{ trial.url }}" class="download">Download JSON</a>
       <a href="{{ contributeDataUrl }}" class="upload">Contribute Data</a>
+      {% if trial.has_discrepancies %}
+        <a href="/trials/{{ trial.id }}/discrepancies">Data discrepancies</a>
+      {% endif %}
     </li>
   </ul>
 
-  <h2>Conducted in</h2>
+  <div class="note">
+    <h2>Identifiers</h2>
+    <dl class="id-list">
+      <dt>
+        OpenTrials ID:
+      </dt>
+      <dd>
+        {{ trial.id }}
+      </dd>
+      {% if trial.primary_id %}
+      <dt>
+        Primary ID:
+      </dt>
+      <dd>
+        {{ trial.primary_id }}
+      </dd>
+      {% endif %}
+      {% if trial.secondary_ids %}
+      <dt>
+        Secondary IDs:
+      </dt>
+      {% for sid in trial.secondary_ids %}
+      <dd>
+        {{ sid }}
+      </dd>
+      {% endfor %}
+      {% endif %}
+    </dl>
+  </div>
+
+  {% if trial.locations.length != 0 %}
+  <h2>Locations</h2>
   <dl>
     {% for location in trial.locations %}
-      <dt>{{ location.attributes.name }}</dt>
+      <dt>{{ location.name }}</dt>
       <dd>{{ location.role | underscoresToCapitalized }}</dd>
     {% endfor %}
   </dl>
+  {% else %}
+  {{ no_data_message('Locations', thing='"location" data') }}
+  {% endif %}
 
+  {% if trial.persons.length != 0 %}
   <h2>Related People</h2>
   <dl>
     {% for person in trial.persons %}
-      <dt><a href="/persons/{{ person.attributes.id }}">{{ person.attributes.name }}</a></dt>
+      <dt><a href="/persons/{{ person.id }}">{{ person.name }}</a></dt>
       <dd>{{ person.role | underscoresToCapitalized }}</dd>
     {% endfor %}
   </dl>
+  {% else %}
+  {{ no_data_message('Related People', thing='"related people"') }}
+  {% endif %}
 
+  {% if trial.organisations.length != 0 %}
   <h2>Related Organisations</h2>
   <dl>
     {% for organisation in trial.organisations %}
-      <dt><a href="/organisations/{{ organisation.attributes.id }}">{{ organisation.attributes.name }}</a></dt>
+      <dt><a href="/organisations/{{ organisation.id }}">{{ organisation.name }}</a></dt>
       <dd>{{ organisation.role | underscoresToCapitalized }}</dd>
     {% endfor %}
   </dl>
+  {% else %}
+  {{ no_data_message('Related Organisations', thing='"related organisations"') }}
+  {% endif %}
 
   <h2>Sources</h2>
   <dl>
@@ -78,5 +178,21 @@
       </dd>
     {% endfor %}
   </dl>
+
+  {% if trial.publications.length != 0 %}
+  <h2>Publications</h2>
+  <ul>
+    {% for publication in trial.publications %}
+      <li>
+        <a href="/publications/{{ publication.id }}">
+          {{ publication.title }}
+        </a>
+      </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  {{ no_data_message('Publications', thing='"publications"') }}
+  {% endif %}
+
 </aside>
 {% endblock %}

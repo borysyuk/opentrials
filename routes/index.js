@@ -31,6 +31,11 @@ const routes = [
     handler: require('../handlers/trials').getTrial,
   },
   {
+    path: '/trials/{id}/discrepancies',
+    method: 'GET',
+    handler: require('../handlers/trials').getDiscrepancies,
+  },
+  {
     path: '/trials/{trialId}/records/{id}',
     method: 'GET',
     handler: require('../handlers/trials').getRecord,
@@ -59,6 +64,11 @@ const routes = [
     path: '/organisations/{id}',
     method: 'GET',
     handler: require('../handlers/organisation'),
+  },
+  {
+    path: '/publications/{id}',
+    method: 'GET',
+    handler: require('../handlers/publication'),
   },
   {
     path: '/login/google',
