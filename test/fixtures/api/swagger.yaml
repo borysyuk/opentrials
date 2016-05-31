@@ -398,9 +398,7 @@ definitions:
       primary_id:
         type: string
       identifiers:
-        type: array
-        items:
-          type: "string"
+        type: object
       url:
         type: string
       public_title:
@@ -627,12 +625,15 @@ definitions:
   Publication:
     required:
       - id
+      - url
       - source
       - source_url
       - title
       - abstract
     properties:
       id:
+        type: string
+      url:
         type: string
       source:
         $ref: '#/definitions/Source'
@@ -652,7 +653,6 @@ definitions:
         type: array
         items:
           type: string
-
       journal:
         type: string
       date:
@@ -660,11 +660,6 @@ definitions:
         format: date-time
       slug:
         type: string
-      facts:
-        type: array
-        items:
-          type: string
-
 
   RecordSummary:
     required:
@@ -682,10 +677,13 @@ definitions:
   PublicationSummary:
     required:
       - id
+      - url
       - title
       - source
     properties:
       id:
+        type: string
+      url:
         type: string
       title:
         type: string

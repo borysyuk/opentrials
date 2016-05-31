@@ -107,24 +107,29 @@
       <dd>
         {{ trial.id }}
       </dd>
-      {% if trial.primary_id %}
+      {% if trial.primary_source_id %}
       <dt>
         Primary ID:
       </dt>
       <dd>
-        {{ trial.primary_id }}
+        {{ trial.identifiers[trial.primary_source_id] }}
       </dd>
       {% endif %}
-      {% if trial.secondary_ids %}
+
+      {% for name, item in trial.identifiers %}
+      {% if loop.length > 1 %}
+      {% if loop.first %}
       <dt>
         Secondary IDs:
       </dt>
-      {% for sid in trial.secondary_ids %}
-      <dd>
-        {{ sid }}
-      </dd>
-      {% endfor %}
       {% endif %}
+      {% if name != trial.primary_source_id %}
+      <dd>
+        {{ item }}
+      </dd>
+      {% endif %}
+      {% endif %}
+      {% endfor %}
     </dl>
   </div>
 
